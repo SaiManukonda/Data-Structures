@@ -157,8 +157,33 @@ public class Transit {
 	 * @return
 	 */
 	public static ArrayList<TNode> bestPath(TNode trainZero, int destination) {
-		// WRITE YOUR CODE HERE
-		return null;
+		ArrayList<TNode> path = new ArrayList<TNode>();
+		TNode currNode = trainZero;
+		path.add(currNode);
+		while(currNode != null){
+             if(currNode.location == destination){
+				 break;
+			 }
+			 else if(currNode.next != null){
+				 if(currNode.next.location > destination){
+					 currNode = currNode.down;
+					 path.add(currNode);
+				 }
+				 else if(currNode.next.location <= destination){
+					 currNode = currNode.next;
+					 path.add(currNode);
+				 }
+			 }
+			 else{
+				 currNode = currNode.down;
+				 path.add(currNode);
+			 }
+		}
+		while(currNode.down != null){
+           currNode = currNode.down;
+		   path.add(currNode);
+		}
+		return path;
 	}
 
 	/**
@@ -169,8 +194,45 @@ public class Transit {
 	 * @return
 	 */
 	public static TNode duplicate(TNode trainZero) {
-		// WRITE YOUR CODE HERE
-		return null;
+		TNode duplicateTrain = new TNode(0);
+		TNode duplicateBus = new TNode(0);
+		duplicateTrain.down = duplicateBus;
+		TNode duplicateWalk = new TNode(0);
+		duplicateBus.down = duplicateWalk;
+
+		TNode currNode = trainZero.next;
+		TNode currDuplicateTrain = duplicateTrain;
+
+		while(currNode != null){
+             currDuplicateTrain.next = new TNode(currNode.location);
+			 if(currNode.down != null){
+				 currDuplicateTrain.next.down = new TNode(currNode.down.location);
+			 }
+			 currNode = currNode.next;
+			 currDuplicateTrain = currDuplicateTrain.next;
+		}
+
+		currNode = trainZero.down.next;
+		TNode currDuplicateBus = duplicateBus;
+		while(currNode != null){
+			currDuplicateBus.next = new TNode(currNode.location);
+			if(currNode.down != null){
+				currDuplicateBus.next.down = new TNode(currNode.down.location);
+			}
+			currNode = currNode.next;
+			currDuplicateBus = currDuplicateBus.next;
+		}
+
+		currNode = trainZero.down.down.next;
+		TNode currDuplicateWalk = duplicateWalk;
+		while(currNode != null){
+			currDuplicateWalk.next = new TNode(currNode.location);
+			currNode = currNode.next;
+			currDuplicateWalk = currDuplicateWalk.next;
+		}
+
+		return duplicateTrain;
+
 	}
 
 	/**
