@@ -188,7 +188,7 @@ public class Percolation {
 	*/
 	public static void main ( String[] args ) {
 
-		double p = 0.3;
+		double p = 0.7;
 		Percolation pl = new Percolation(5);
 
 		/* 
