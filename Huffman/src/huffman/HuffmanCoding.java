@@ -112,9 +112,28 @@ public class HuffmanCoding {
      */
     public static ArrayList<CharFreq> makeSortedList(String filename) {
         StdIn.setFile(filename);
-        /* Your code goes here */
-
-        return null; // Delete this line
+        int[] freq = new int[128];
+        int total = 0;
+        while(StdIn.hasNextChar()){
+            freq[StdIn.readChar()]++;
+            total++;
+        }
+        ArrayList<CharFreq> temp = new ArrayList<CharFreq>();
+        for(int i = 0; i < 128; i++){
+            if(freq[i] > 0){
+                temp.add(new CharFreq((char)i, (double)freq[i]/total));
+            }
+        }
+        if(temp.size() == 1){
+            int cha = temp.get(0).getCharacter();
+            if(cha == 127){
+                temp.add(new CharFreq((char)0, 0));
+            }
+            else{
+                temp.add(new CharFreq((char)(cha+1), 0));
+            }
+        }
+        return temp;
     }
 
     /**
