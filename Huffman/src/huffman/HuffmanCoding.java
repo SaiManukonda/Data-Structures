@@ -219,11 +219,24 @@ public class HuffmanCoding {
      * @return Array of strings containing only 1's and 0's representing character encodings
      */
     public static String[] makeEncodings(TreeNode root) {
-        /* Your code goes here */
-
-        return null; // Delete this line
+        String[] encodings = new String[128];
+        helpEncode(root,encodings,"");
+        return encodings;
     }
-
+    
+    private static void helpEncode(TreeNode root, String[] encodings, String current){
+        if(root == null){
+            return;
+        }
+        else if(root.getLeft() == null && root.getRight() == null){
+            encodings[(int)root.getData().getCharacter()] = current;
+        }
+        else{
+            helpEncode(root.getRight(),encodings,current + "1");
+            helpEncode(root.getLeft(),encodings,current + "0");
+        }
+    }
+    
     /**
      * Using a given string array of encodings, a given text file, and a file name to encode into,
      * this method makes use of the writeBitString method to write the final encoding of 1's and
@@ -235,7 +248,11 @@ public class HuffmanCoding {
      */
     public static void encodeFromArray(String[] encodings, String textFile, String encodedFile) {
         StdIn.setFile(textFile);
-        /* Your code goes here */
+        String ans = "";
+        while(StdIn.hasNextChar()){
+            ans = ans + encodings[StdIn.readChar()];
+        }
+        writeBitString(encodedFile, ans);
     }
     
     /**
