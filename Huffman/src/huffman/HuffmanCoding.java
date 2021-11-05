@@ -179,7 +179,7 @@ public class HuffmanCoding {
             else{
                 TreeNode temp1 = source.peek();
                 TreeNode temp2 = target.peek();
-                if(temp1.getData().getProbOccurrence() < temp2.getData().getProbOccurrence()){
+                if(temp1.getData().getProbOccurrence() <= temp2.getData().getProbOccurrence()){
                     one = source.dequeue();
                 }
                 else{
@@ -195,7 +195,7 @@ public class HuffmanCoding {
                 else{
                     temp1 = source.peek();
                     temp2 = target.peek();
-                    if(temp1.getData().getProbOccurrence() < temp2.getData().getProbOccurrence()){
+                    if(temp1.getData().getProbOccurrence() <= temp2.getData().getProbOccurrence()){
                         two = source.dequeue();
                     }
                     else{
@@ -266,6 +266,20 @@ public class HuffmanCoding {
      */
     public static void decode(String encodedFile, TreeNode root, String decodedFile) {
         StdOut.setFile(decodedFile);
-        /* Your code goes here */
+        String encoding = readBitString(encodedFile);
+        TreeNode curr = root;
+        for(int i = 0; i < encoding.length(); i++){
+            if(encoding.charAt(i) == '0'){
+                curr = curr.getLeft();
+            }
+            else{
+                curr = curr.getRight();
+            }
+
+            if(curr.getLeft() == null && curr.getRight() == null){
+                StdOut.print(curr.getData().getCharacter());
+                curr = root;
+            }
+        }
     }
 }
