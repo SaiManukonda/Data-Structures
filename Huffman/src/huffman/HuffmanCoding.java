@@ -121,16 +121,32 @@ public class HuffmanCoding {
         ArrayList<CharFreq> temp = new ArrayList<CharFreq>();
         for(int i = 0; i < 128; i++){
             if(freq[i] > 0){
-                temp.add(new CharFreq((char)i, (double)freq[i]/total));
+                if(temp.size() == 0){
+                    temp.add(new CharFreq((char)i, (double)freq[i]/total));
+                }
+                else{
+                    Boolean check = false;
+                    for(int f = 0; f < temp.size(); f++){
+                        check = false;
+                         if(temp.get(f).getProbOccurrence() > (double)freq[i]/total){
+                            temp.add(f,new CharFreq((char)i, (double)freq[i]/total));
+                            check = true;
+                            break;
+                         }
+                    }
+                    if(check == false){
+                        temp.add(new CharFreq((char)i, (double)freq[i]/total));
+                    }
+                }
             }
         }
         if(temp.size() == 1){
             int cha = temp.get(0).getCharacter();
             if(cha == 127){
-                temp.add(new CharFreq((char)0, 0));
+                temp.add(0,new CharFreq((char)0, 0));
             }
             else{
-                temp.add(new CharFreq((char)(cha+1), 0));
+                temp.add(0,new CharFreq((char)(cha+1), 0));
             }
         }
         return temp;
