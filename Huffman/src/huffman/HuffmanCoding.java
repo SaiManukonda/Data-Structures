@@ -159,9 +159,55 @@ public class HuffmanCoding {
      * @return A TreeNode representing the root of the huffman coding tree
      */
     public static TreeNode makeTree(ArrayList<CharFreq> sortedList) {
-        /* Your code goes here */
+        Queue<TreeNode> source = new Queue<TreeNode>();
+        Queue<TreeNode> target = new Queue<TreeNode>();
+        for(int i = 0; i < sortedList.size(); i++){
+            TreeNode temp = new TreeNode(sortedList.get(i),null,null);
+            source.enqueue(temp);
+        }
+        while(source.size()>0 || target.size() != 1){
+            TreeNode one = null;
+            TreeNode two = null;
+            if(target.size() == 0){
+                one = source.dequeue();
+                two = source.dequeue();
+            }
+            else if(source.size() == 0){
+                one = target.dequeue();
+                two = target.dequeue();
+            }
+            else{
+                TreeNode temp1 = source.peek();
+                TreeNode temp2 = target.peek();
+                if(temp1.getData().getProbOccurrence() < temp2.getData().getProbOccurrence()){
+                    one = source.dequeue();
+                }
+                else{
+                    one = target.dequeue();
+                }
 
-        return null; // Delete this line
+                if(source.size() == 0){
+                    two = target.dequeue();
+                }
+                else if(target.size() == 0){
+                    two = source.dequeue();
+                }
+                else{
+                    temp1 = source.peek();
+                    temp2 = target.peek();
+                    if(temp1.getData().getProbOccurrence() < temp2.getData().getProbOccurrence()){
+                        two = source.dequeue();
+                    }
+                    else{
+                        two = target.dequeue();
+                    }
+                }
+            }
+            CharFreq sum = new CharFreq(null,one.getData().getProbOccurrence()+two.getData().getProbOccurrence());
+            TreeNode fin = new TreeNode(sum,one,two);
+            target.enqueue(fin);
+        }
+        return target.dequeue(); 
     }
 
     /**
