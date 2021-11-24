@@ -15,8 +15,8 @@ public class Driver {
 		rudb.insertMoviesIntoHashTable(inputFile);
         rudb.print();
 
-        String word1 = "tragic";
-        String word2 = "love";
+        String word1 = "madame";
+        String word2 = "natasha";
 
         ArrayList<MovieSearchResult> als = rudb.topTenSearch(word1, word2);
 	
@@ -27,7 +27,6 @@ public class Driver {
             for ( MovieSearchResult s : als ) {
                 System.out.println(s.getTitle()+"\t["+s.getMinDistance()+"]"); 
             }
-            System.out.println(als.size());
         } else {
             StdOut.println("There are no movies with the words " + word1 + " and " + word2 + " at their description.");
         }

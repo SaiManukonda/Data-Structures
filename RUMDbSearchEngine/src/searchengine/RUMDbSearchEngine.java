@@ -232,9 +232,12 @@ public class RUMDbSearchEngine {
 				hashTable[hashFunction(word)] = temp;
 				hashTable[hashFunction(word)].next = temp2;
 			}
+			wordCount++;
+		}
+		if(getLoadFactor() > threshold){
+			rehash(hashSize*2);
 		}
     }
-
 
 	/*
 	 * Rehash the hash table to newHashSize. Rehash happens when the load factor is
@@ -243,23 +246,29 @@ public class RUMDbSearchEngine {
 	 * @param newHashSize is the new hash size
 	 */
 	private void rehash (int newHashSize){
-        // WordOccurrence[] rehashed = new WordOccurrence[hashTable.length*2];
-		// hashSize = hashTable.length * 2;
-		// for(int i = 0; i < hashTable.length; i++){
-		// 	  WordOccurrence curr = hashTable[i];
-		// 	  while(curr != null){
-		// 		  if(rehashed[hashFunction(curr.getWord())] == null){
-		// 			 rehashed[hashFunction(curr.getWord())] = curr;
-		// 		  }
-		// 		  else{
-		// 			  WordOccurrence temp = rehashed[hashFunction(curr.getWord())];
-		// 			  rehashed[hashFunction(curr.getWord())] = curr;
-		// 			  rehashed[hashFunction(curr.getWord())].next = temp;
-		// 		  }
-		// 		  curr = curr.next;
-		// 	  }
-		// }
-        // hashTable = rehashed;
+        WordOccurrence[] rehashed = new WordOccurrence[newHashSize];
+		hashSize = newHashSize;
+		for(int i = 0; i < hashTable.length; i++){
+			  WordOccurrence curr = hashTable[i];
+			  while(curr!=null){
+				  WordOccurrence temp = curr;
+				  curr = curr.next;
+				  temp.next = null;
+				  rehashHelper(temp, rehashed);
+			  }
+		}
+        hashTable = rehashed;
+	}
+    
+	private void rehashHelper(WordOccurrence add, WordOccurrence[] rehashed){
+		if(rehashed[hashFunction(add.getWord())] == null){
+			rehashed[hashFunction(add.getWord())] = add;
+		 }
+		 else{
+			 WordOccurrence temp = rehashed[hashFunction(add.getWord())];
+			 rehashed[hashFunction(add.getWord())] = add;
+			 rehashed[hashFunction(add.getWord())].next = temp;
+		 }
 	}
 
 	/* 
@@ -290,10 +299,66 @@ public class RUMDbSearchEngine {
 	 * @return ArrayList of MovieSearchResult objects.
 	 */
 	public ArrayList<MovieSearchResult> createMovieSearchResult (String wordA, String wordB) {
-
-        // COMPLETE THIS METHOD
-       		
-		return null;
+		if(getWordOccurrence(wordA) == null || getWordOccurrence(wordB) == null){
+			return null;
+		}
+		ArrayList<Location> first = getWordOccurrence(wordA).getLocations();
+		ArrayList<Location> second = getWordOccurrence(wordB).getLocations();
+        ArrayList<MovieSearchResult> search = new ArrayList<MovieSearchResult>();
+		// for(int i = 0; i < first.size(); i++){
+		// 	for(int j = 0; j < second.size(); j++){
+		// 		if(first.get(i).getTitle().equals(second.get(j).getTitle())){
+		// 			if(inserted(search, first.get(i).getTitle()) >= 0){
+		// 				if(!search.get(inserted(search, first.get(i).getTitle())).getArrayListA().contains(first.get(i).getPosition())){
+		// 					search.get(inserted(search, first.get(i).getTitle())).addOccurrenceA(first.get(i).getPosition());
+		// 				}
+		// 				if(!search.get(inserted(search, first.get(i).getTitle())).getArrayListB().contains(second.get(j).getPosition())){
+		// 					search.get(inserted(search, first.get(i).getTitle())).addOccurrenceB(second.get(j).getPosition());
+		// 				}
+		// 			}
+		// 			else{
+		// 				MovieSearchResult temp = new MovieSearchResult(first.get(i).getTitle());
+		// 				temp.addOccurrenceA(first.get(i).getPosition());
+		// 				temp.addOccurrenceB(second.get(j).getPosition());
+		// 				search.add(temp);
+		// 			}
+		// 		}
+		// 	}
+		// }
+		for(int i = 0; i < first.size(); i++){
+            if(inserted(search, first.get(i).getTitle()) >= 0){
+				if(!search.get(inserted(search, first.get(i).getTitle())).getArrayListA().contains(first.get(i).getPosition())){
+					search.get(inserted(search, first.get(i).getTitle())).addOccurrenceA(first.get(i).getPosition());
+				}
+			}
+			else{
+				MovieSearchResult temp = new MovieSearchResult(first.get(i).getTitle());
+				temp.addOccurrenceA(first.get(i).getPosition());
+				search.add(temp);
+			} 
+		}
+		for(int i = 0; i < second.size();i++){
+            if(inserted(search, second.get(i).getTitle()) >= 0){
+				if(!search.get(inserted(search, second.get(i).getTitle())).getArrayListB().contains(second.get(i).getPosition())){
+					search.get(inserted(search, second.get(i).getTitle())).addOccurrenceB(second.get(i).getPosition());
+				}
+			}
+			else{
+				MovieSearchResult temp = new MovieSearchResult(second.get(i).getTitle());
+				temp.addOccurrenceB(second.get(i).getPosition());
+				search.add(temp);
+			} 
+		}
+		return search;
+	}
+    
+	private int inserted(ArrayList<MovieSearchResult> search, String title){
+         for(int i = 0; i < search.size(); i++){
+			 if(search.get(i).getTitle().equals(title)){
+				return i;
+			 }
+		 }
+		 return -1;
 	}
 
 	/*
@@ -324,9 +389,18 @@ public class RUMDbSearchEngine {
      * words.
 	 */
 	public void calculateMinDistance(MovieSearchResult msr){
-
-        // COMPLETE THIS METHOD
-	
+        int min = Integer.MAX_VALUE;
+		for(int i = 0; i < msr.getArrayListA().size(); i++){
+			for(int f = 0; f < msr.getArrayListB().size(); f++){
+				min = Math.min(min, Math.abs(msr.getArrayListA().get(i)-msr.getArrayListB().get(f)));
+			}
+		}
+		if(min == Integer.MAX_VALUE){
+			msr.setMinDistance(-1);
+		}
+		else{
+		    msr.setMinDistance(min);
+		}
 	}
 
 	/*
@@ -344,9 +418,23 @@ public class RUMDbSearchEngine {
 	 * 	NOTE: feel free to use Collections.sort( arrayListOfMovieSearchResult ); to sort.
 	 */
 	public ArrayList<MovieSearchResult> topTenSearch(String wordA, String wordB){
-
-        // COMPLETE THIS METHOD
-      
-		return null;
+        ArrayList<MovieSearchResult> temp = createMovieSearchResult(wordA, wordB);
+		if(temp == null){
+			return null;
+		}
+		for(int i = 0; i < temp.size(); i++){
+              calculateMinDistance(temp.get(i));
+		}
+        Collections.sort(temp);
+		while(temp.size()>10){
+			temp.remove(10);
+		}
+		for(int i = 0; i < temp.size(); i++){
+             if(temp.get(i).getMinDistance() == -1){
+				 temp.remove(i);
+				 i--;
+			 }
+		}
+		return temp;
 	}
 }
