@@ -1,6 +1,6 @@
-package searchengine;
-
+package prereqchecker;
 /******************************************************************************
+
  *  Compilation:  javac StdOut.java
  *  Execution:    java StdOut
  *  Dependencies: none
@@ -9,7 +9,10 @@ package searchengine;
  *
  ******************************************************************************/
 
+import java.lang.System;
 import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -85,11 +88,25 @@ public final class StdOut {
     // don't instantiate
     private StdOut() { }
 
+    public static void setFile(String filename) {
+        try {
+            out = new PrintWriter(new FileOutputStream(new java.io.File(filename)), true);
+        }
+        catch (java.io.IOException ioe) {
+            System.err.println("Could not open " + filename);
+        }
+    }
+
+    public static void close() {
+        out.close();
+    }
+
    /**
      * Terminates the current line by printing the line-separator string.
      */
     public static void println() {
         out.println();
+        out.flush();
     }
 
    /**
@@ -99,6 +116,7 @@ public final class StdOut {
      */
     public static void println(Object x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -108,6 +126,7 @@ public final class StdOut {
      */
     public static void println(boolean x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -117,6 +136,7 @@ public final class StdOut {
      */
     public static void println(char x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -126,6 +146,7 @@ public final class StdOut {
      */
     public static void println(double x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -135,6 +156,7 @@ public final class StdOut {
      */
     public static void println(float x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -144,6 +166,7 @@ public final class StdOut {
      */
     public static void println(int x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -153,6 +176,7 @@ public final class StdOut {
      */
     public static void println(long x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -162,6 +186,7 @@ public final class StdOut {
      */
     public static void println(short x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -173,6 +198,7 @@ public final class StdOut {
      */
     public static void println(byte x) {
         out.println(x);
+        out.flush();
     }
 
    /**
@@ -271,6 +297,7 @@ public final class StdOut {
         out.print(x);
         out.flush();
     }
+    
 
    /**
      * Prints a formatted string to standard output, using the specified format
@@ -298,7 +325,8 @@ public final class StdOut {
         out.flush();
     }
 
-   /**
+    
+    /**
      * Unit tests some of the methods in {@code StdOut}.
      *
      * @param args the command-line arguments

@@ -1,6 +1,5 @@
-package searchengine;
+package prereqchecker;
 /******************************************************************************
- * 
  *  Compilation:  javac StdIn.java
  *  Execution:    java StdIn   (interactive test of basic functionality)
  *  Dependencies: none
@@ -597,7 +596,7 @@ public final class StdIn {
     /**
      * If StdIn changes, use this to reinitialize the scanner.
      */
-    public static void resync() {
+    private static void resync() {
         setScanner(new Scanner(new java.io.BufferedInputStream(System.in), CHARSET_NAME));
     }
     
@@ -642,7 +641,7 @@ public final class StdIn {
 
     public static void setFile(String filename) {
         try {
-            scanner.close(); // warning, this may close StdIn the first time!
+            // scanner.close(); // warning, this may close StdIn the first time!
             setScanner(new Scanner(new java.io.File(filename), CHARSET_NAME));
         }
         catch (java.io.IOException ioe) {
