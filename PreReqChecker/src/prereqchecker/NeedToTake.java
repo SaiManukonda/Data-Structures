@@ -33,6 +33,57 @@ public class NeedToTake {
             return;
         }
 
-	// WRITE YOUR CODE HERE
+	    StdIn.setFile(args[0]);
+        int n = Integer.parseInt(StdIn.readLine());
+        ArrayList<ArrayList<String>> adj = new ArrayList<ArrayList<String>>();
+        for(int i = 0; i < n ; i++){
+            ArrayList<String> temp = new ArrayList<String>();
+            temp.add(StdIn.readLine());
+            adj.add(temp);
+        }
+        n = Integer.parseInt(StdIn.readLine());
+        for(int i = 0; i < n; i++){
+            adj.get(find(StdIn.readString(),adj)).add(StdIn.readString());
+        }
+        Set<String> ClassesTaken = new HashSet<>();
+        StdIn.setFile(args[1]);
+        String target  = StdIn.readLine();
+        Set<String> targetPreReqs = new HashSet<>();
+        addAllprereq(target, targetPreReqs, adj);
+        targetPreReqs.remove(target);
+        n = Integer.parseInt(StdIn.readLine());
+        for(int i = 0; i < n; i++){
+            addAllprereq(StdIn.readLine(), ClassesTaken, adj);
+        }
+        StdOut.setFile(args[2]);
+        for (String i : targetPreReqs) {
+            if(!ClassesTaken.contains(i)){
+                StdOut.println(i);
+            }
+        }
     }
+    private static void addAllprereq(String course, Set<String> ClassesTaken, ArrayList<ArrayList<String>> adj){
+        if(adj.get(find(course,adj)).size() == 1){
+            if(!ClassesTaken.contains(course)){
+              ClassesTaken.add(course);
+            }
+        }
+        else{
+          if(!ClassesTaken.contains(course)){
+              ClassesTaken.add(course);
+            }
+            for(int i = 1;i < adj.get(find(course,adj)).size(); i++){
+              addAllprereq(adj.get(find(course,adj)).get(i), ClassesTaken, adj);
+            }
+        }
+  }
+
+  private static int find(String course, ArrayList<ArrayList<String>> adj){
+      for(int i = 0; i < adj.size(); i++){
+          if(adj.get(i).get(0).equals(course)){
+              return i;
+          }
+      }
+      return -1;
+  }
 }

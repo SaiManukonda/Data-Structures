@@ -6,6 +6,41 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch SchedulePlan",
+            "request": "launch",
+            "mainClass": "prereqchecker.SchedulePlan",
+            "projectName": "PreReqChecker_279b8623"
+        },
+        {
+            "type": "java",
+            "name": "Launch NeedToTake",
+            "request": "launch",
+            "mainClass": "prereqchecker.NeedToTake",
+            "projectName": "PreReqChecker_279b8623"
+        },
+        {
+            "type": "java",
+            "name": "Launch Eligible",
+            "request": "launch",
+            "mainClass": "prereqchecker.Eligible",
+            "projectName": "PreReqChecker_279b8623"
+        },
+        {
+            "type": "java",
+            "name": "Launch ValidPrereq",
+            "request": "launch",
+            "mainClass": "prereqchecker.ValidPrereq",
+            "projectName": "PreReqChecker_279b8623"
+        },
+        {
+            "type": "java",
+            "name": "Launch AdjList",
+            "request": "launch",
+            "mainClass": "prereqchecker.AdjList",
+            "projectName": "PreReqChecker_279b8623"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"

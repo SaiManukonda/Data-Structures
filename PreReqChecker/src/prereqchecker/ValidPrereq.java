@@ -1,4 +1,5 @@
 package prereqchecker;
+import java.util.*;
 
 /**
  * Steps to implement this class main method:
@@ -29,6 +30,75 @@ public class ValidPrereq {
             StdOut.println("Execute: java -cp bin prereqchecker.ValidPrereq <adjacency list INput file> <valid prereq INput file> <valid prereq OUTput file>");
             return;
         }
-	// WRITE YOUR CODE HERE
+	    StdIn.setFile(args[0]);
+        int n = Integer.parseInt(StdIn.readLine());
+        ArrayList<ArrayList<String>> adj = new ArrayList<ArrayList<String>>();
+        for(int i = 0; i < n ; i++){
+            ArrayList<String> temp = new ArrayList<String>();
+            temp.add(StdIn.readLine());
+            adj.add(temp);
+        }
+        n = Integer.parseInt(StdIn.readLine());
+        for(int i = 0; i < n; i++){
+            adj.get(find(StdIn.readString(),adj)).add(StdIn.readString());
+        }
+
+        StdIn.setFile(args[1]);
+        String course1 =  StdIn.readLine();
+        String course2 =  StdIn.readLine();
+        adj.get(find(course1,adj)).add(course2);
+
+        StdOut.setFile(args[2]);
+        if(isValid(adj) == true){
+            StdOut.print("YES");
+        }
+        else{
+            StdOut.print("NO");
+        }
+    }
+    
+    private static boolean isValid(ArrayList<ArrayList<String>> adj){
+        Set<String> set = new HashSet<>();
+        boolean valid = true;
+        for(int i = 0; i < adj.size(); i++){
+            set.add(adj.get(i).get(0));
+            int f = 1;
+            while(f < adj.get(i).size()){
+                valid = isValidHelper(adj, set, adj.get(i).get(f));
+                if(valid == false){
+                    return false;
+                }
+                f++; 
+            }
+            set.remove(adj.get(i).get(0));
+        }
+        return true;
+    }
+    
+    private static boolean isValidHelper(ArrayList<ArrayList<String>> adj, Set<String> set, String curr){
+       if(set.contains(curr)){
+           return false;
+       }
+       set.add(curr);
+       boolean valid = true;
+       int i = 1;
+       while(i < adj.get(find(curr, adj)).size()){
+         valid = isValidHelper(adj,set,adj.get(find(curr, adj)).get(i));
+         if(valid == false){
+            return false;
+         }
+         i++;
+       }
+       set.remove(curr);
+       return true;
+    }
+
+    private static int find(String course, ArrayList<ArrayList<String>> adj){
+        for(int i = 0; i < adj.size(); i++){
+            if(adj.get(i).get(0).equals(course)){
+                return i;
+            }
+        }
+        return -1;
     }
 }

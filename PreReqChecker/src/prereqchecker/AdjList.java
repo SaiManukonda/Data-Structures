@@ -1,4 +1,5 @@
 package prereqchecker;
+import java.util.*;
 
 /**
  * Steps to implement this class main method:
@@ -24,7 +25,36 @@ public class AdjList {
             StdOut.println("Execute: java -cp bin prereqchecker.AdjList <adjacency list INput file> <adjacency list OUTput file>");
             return;
         }
+        
+	    StdIn.setFile(args[0]);
+        int n = Integer.parseInt(StdIn.readLine());
+        ArrayList<ArrayList<String>> adj = new ArrayList<ArrayList<String>>();
+        for(int i = 0; i < n ; i++){
+            ArrayList<String> temp = new ArrayList<String>();
+            temp.add(StdIn.readLine());
+            adj.add(temp);
+        }
+        n = Integer.parseInt(StdIn.readLine());
+        for(int i = 0; i < n; i++){
+            adj.get(find(StdIn.readString(),adj)).add(StdIn.readString());
+        }
+        StdOut.setFile(args[1]);
+        for(int i = 0; i < adj.size(); i++){
+            ArrayList<String> curr = adj.get(i);
+            for(int j = 0; j < curr.size(); j++){
+                StdOut.print(curr.get(j) + " ");
+            }
+            StdOut.println();
+        }
+        
+    }
 
-	// WRITE YOUR CODE HERE
+    private static int find(String course, ArrayList<ArrayList<String>> adj){
+        for(int i = 0; i < adj.size(); i++){
+            if(adj.get(i).get(0).equals(course)){
+                return i;
+            }
+        }
+        return -1;
     }
 }

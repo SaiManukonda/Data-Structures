@@ -4,4 +4,4 @@ Percolation Grade = 89/89
 Transit Grade = 93/93
 Huffman Grade = 60/60
 RUMDb Search Engine Grade = 24/24
-Graphs Grade = TBD
+Graphs Grade = 24/24 & 6/6 for extra credit problem
